@@ -7,10 +7,18 @@ let authClient = null;
 const getAuthClient = async () => {
   if (authClient) return authClient;
   try {
-    const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS || 'service-account.json',
-      scopes: ['https://www.googleapis.com/auth/generative-language', 'https://www.googleapis.com/auth/cloud-platform'],
-    });
+    let auth;
+    if (process.env.GOOGLE_CREDENTIALS_JSON) {
+      auth = new google.auth.GoogleAuth({
+        credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON),
+        scopes: ['https://www.googleapis.com/auth/generative-language', 'https://www.googleapis.com/auth/cloud-platform'],
+      });
+    } else {
+      auth = new google.auth.GoogleAuth({
+        keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS || 'service-account.json',
+        scopes: ['https://www.googleapis.com/auth/generative-language', 'https://www.googleapis.com/auth/cloud-platform'],
+      });
+    }
     authClient = await auth.getClient();
     return authClient;
   } catch (error) {

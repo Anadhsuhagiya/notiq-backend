@@ -31,6 +31,6 @@ connectDB().then(() => {
     });
   });
 }).catch((err) => {
-  logger.error('DB connection failed:', err.message);
+  logger.error('DB connection failed:', err);
   process.exit(1);
 });
